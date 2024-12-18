@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飲食推薦App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        nav {
+            background-color: #333;
+            overflow: hidden;
+        }
+
+        nav a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        nav a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .category-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border: none;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+        .category-btn:hover {
+            background-color: #45a049;
+        }
+
+        .recommendation-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .recommendation-item {
+            background-color: #ffffff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .recommendation-item h3 {
+            margin: 0;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>飲食推薦App</h1>
+    <p>根據您的需求，為您推薦各種美味食譜！</p>
+</header>
+
+<nav>
+    <a href="javascript:void(0)" onclick="showCategory('breakfast')">早餐</a>
+    <a href="javascript:void(0)" onclick="showCategory('lunch')">午餐</a>
+    <a href="javascript:void(0)" onclick="showCategory('dinner')">晚餐</a>
+    <a href="javascript:void(0)" onclick="showCategory('healthy')">健康食譜</a>
+</nav>
+
+<div class="container">
+    <h2 id="breakfast-title" style="display:none;">早餐推薦</h2>
+    <button class="category-btn" id="breakfast-btn" onclick="showRecommendations('breakfast')">顯示早餐推薦</button>
+    <ul id="breakfast-recommendations" class="recommendation-list"></ul>
+
+    <h2 id="lunch-title" style="display:none;">午餐推薦</h2>
+    <button class="category-btn" id="lunch-btn" onclick="showRecommendations('lunch')">顯示午餐推薦</button>
+    <ul id="lunch-recommendations" class="recommendation-list"></ul>
+
+    <h2 id="dinner-title" style="display:none;">晚餐推薦</h2>
+    <button class="category-btn" id="dinner-btn" onclick="showRecommendations('dinner')">顯示晚餐推薦</button>
+    <ul id="dinner-recommendations" class="recommendation-list"></ul>
+
+    <h2 id="healthy-title" style="display:none;">健康食譜推薦</h2>
+    <button class="category-btn" id="healthy-btn" onclick="showRecommendations('healthy')">顯示健康食譜推薦</button>
+    <ul id="healthy-recommendations" class="recommendation-list"></ul>
+</div>
+
+<footer>
+    <p>&copy; 2024 飲食推薦App - 所有權利保留</p>
+</footer>
+
+<script>
+    // 推薦食譜數據
+    const recommendations = {
+        breakfast: [
+            { name: "煎蛋三明治", description: "營養豐富，快速簡單" },
+            { name: "蔬菜水果沙拉", description: "富含纖維與維生素" },
+            { name: "燕麥粥", description: "健康又飽足感" }
+        ],
+        lunch: [
+            { name: "雞胸肉沙拉", description: "低卡又高蛋白" },
+            { name: "炒飯", description: "美味的午餐選擇" },
+            { name: "牛肉麵", description: "濃郁的湯底與牛肉" }
+        ],
+        dinner: [
+            { name: "三文魚生魚片", description: "富含Omega-3脂肪酸" },
+            { name: "紅燒排骨", description: "色香味俱全的晚餐" },
+            { name: "番茄義大利麵", description: "清新爽口的晚餐選擇" }
+        ],
+        healthy: [
+            { name: "雞胸肉配青菜", description: "低脂健康，營養均衡" },
+            { name: "蒸魚", description: "高蛋白，低熱量" },
+            { name: "豆腐蔬菜湯", description: "清爽又有營養" }
+        ]
+    };
+
+    // 顯示食物推薦
+    function showRecommendations(category) {
+        const listId = `${category}-recommendations`;
+        const titleId = `${category}-title`;
+        const list = document.getElementById(listId);
+        const title = document.getElementById(titleId);
+        
+        list.innerHTML = '';
+        title.style.display = 'block';  // 顯示類別標題
+
+        recommendations[category].forEach(item => {
+            const li = document.createElement('li');
+            li.classList.add('recommendation-item');
+            li.innerHTML = `<h3>${item.name}</h3><p>${item.description}</p>`;
+            list.appendChild(li);
+        });
+    }
+
+    // 顯示選定的類別並隱藏其他類別
+    function showCategory(category) {
+        const categories = ['breakfast', 'lunch', 'dinner', 'healthy'];
+
+        categories.forEach(cat => {
+            document.getElementById(`${cat}-title`).style.display = 'none';
+            document.getElementById(`${cat}-recommendations`).style.display = 'none';
+            document.getElementById(`${cat}-btn`).style.display = 'block';
+        });
+
+        document.getElementById(`${category}-title`).style.display = 'block';
+        document.getElementById(`${category}-recommendations`).style.display = 'block';
+        document.getElementById(`${category}-btn`).style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
