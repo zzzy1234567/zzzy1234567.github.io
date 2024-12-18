@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跳躍圓球遊戲</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background-color: #87ceeb;
+            overflow: hidden;
+        }
+
+        .ball {
+            width: 50px;
+            height: 50px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: bottom 0.1s ease-out;
+        }
+
+        .ground {
+            width: 100%;
+            height: 20px;
+            background-color: #2e8b57;
+            position: absolute;
+            bottom: 0;
+        }
+
+        h1 {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            font-size: 2em;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>跳躍圓球遊戲</h1>
+        <div class="ball" id="ball"></div>
+        <div class="ground"></div>
+    </div>
+
+    <script>
+        // 變數設置
+        const ball = document.getElementById('ball');
+        const gameContainer = document.querySelector('.game-container');
+        const groundHeight = 20;  // 地面高度
+        const jumpHeight = 150;   // 跳躍的最大高度
+        const gravity = 5;        // 重力，控制圓球下落速度
+        let isJumping = false;    // 跳躍狀態
+
+        // 處理跳躍邏輯
+        function jump() {
+            if (isJumping) return;  // 防止連續跳躍
+
+            isJumping = true;
+            let currentHeight = 0;
+            let goingUp = true;
+
+            // 設定圓球跳躍的過程
+            const jumpInterval = setInterval(() => {
+                if (goingUp) {
+                    currentHeight += 10;
+                    if (currentHeight >= jumpHeight) {
+                        goingUp = false; // 到達最高點後開始下落
+                    }
+                } else {
+                    currentHeight -= gravity;
+                    if (currentHeight <= 0) {
+                        clearInterval(jumpInterval); // 停止跳躍，圓球回到地面
+                        currentHeight = 0;
+                        isJumping = false;
+                    }
+                }
+
+                // 更新圓球的位置
+                ball.style.bottom = currentHeight + groundHeight + 'px';
+            }, 20);
+        }
+
+        // 監聽鍵盤事件來控制圓球跳躍
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                jump();
+            }
+        });
+
+    </script>
+
+</body>
+</html>
