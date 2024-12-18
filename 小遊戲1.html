@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跳躍圓球遊戲</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background-color: #87ceeb;
+            overflow: hidden;
+            background: linear-gradient(to top, #87ceeb, #ffffff);
+        }
+
+        .ball {
+            width: 50px;
+            height: 50px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .ground {
+            width: 100%;
+            height: 20px;
+            background-color: #2e8b57;
+            position: absolute;
+            bottom: 0;
+        }
+
+        .obstacle {
+            width: 30px;
+            height: 30px;
+            background-color: #8b0000;
+            position: absolute;
+            bottom: 20px;
+        }
+
+        h1 {
+            position: absolute;
+            top: 20px;
+            width: 100%;
+            font-size: 2em;
+            color: white;
+        }
+
+        #score {
+            position: absolute;
+            top: 60px;
+            width: 100%;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        #lives {
+            position: absolute;
+            top: 100px;
+            width: 100%;
+            font-size: 1.5em;
+            color: white;
+        }
+
+        #upgrade {
+            position: absolute;
+            top: 140px;
+            width: 100%;
+            font-size: 1.5em;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>跳躍圓球遊戲</h1>
+        <div class="ball" id="ball"></div>
+        <div class="ground"></div>
+        <div id="score">得分：0</div>
+        <div id="lives">生命：3</div>
+        <div id="upgrade">升級：無</div>
+    </div>
+
+    <script>
+        const ball = document.getElementById('ball');
+        const gameContainer = document.querySelector('.game-container');
+        const scoreElement = document.getElementById('score');
+        const livesElement = document.getElementById('lives');
+        const upgradeElement = document.getElementById('upgrade');
+        const groundHeight = 20;
+        const jumpHeight = 150;
+        const gravity = 3;  // 重力數值減小，使跳躍時間延長
+        const obstacleWidth = 30;
+        const obstacleHeight = 30;
+        const maxLives = 3;
+        const upgradeLevels = ['無', '雙跳', '加速', '高跳'];
+
+        let isJumping = false;
+        let currentHeight = 0;
+        let isGameOver = false;
+        let score = 0;
+        let lives = maxLives;
+        let obstacles = [];
+        let obstacleSpeed = 2; // 障礙物的初始速度
+        let jumpUpgrade = 0; // 0: 無升級, 1: 雙跳, 2: 加速, 3: 高跳
+
+        // 跳躍邏輯
+        function jump() {
+            if (isJumping || isGameOver) return;
+            isJumping = true;
+
+            let goingUp = true;
+            const jumpHeightActual = jumpUpgrade === 3 ? jumpHeight * 1.5 : jumpHeight; // 高跳升級
+
+            const jumpInterval = setInterval(() => {
+                if (goingUp) {
+                    currentHeight += 8; // 調整上升速度，讓跳躍更平滑
+                    if (currentHeight >= jumpHeightActual) {
+                        goingUp = false;
+                    }
+                } else {
+                    currentHeight -= gravity; // 減小重力，延長下降時間
+                    if (currentHeight <= 0) {
+                        clearInterval(jumpInterval);
+                        currentHeight = 0;
+                        isJumping = false;
+                    }
+                }
+                ball.style.bottom = currentHeight + groundHeight + 'px';
+                checkCollision();
+            }, 20);
+        }
+
+        // 檢查碰撞
+        function checkCollision() {
+            const ballRect = ball.getBoundingClientRect();
+
+            // 檢查每個障礙物
+            for (let i = 0; i < obstacles.length; i++) {
+                const obstacle = obstacles[i];
+                const obstacleRect = obstacle.getBoundingClientRect();
+
+                if (ballRect.left < obstacleRect.right &&
+                    ballRect.right > obstacleRect.left &&
+                    ballRect.bottom > obstacleRect.top &&
+                    ballRect.top < obstacleRect.bottom) {
+                    handleCollision();
+                }
+            }
+        }
+
+        // 處理碰撞
+        function handleCollision() {
+            lives--;
+            livesElement.textContent = `生命：${lives}`;
+
+            if (lives <= 0) {
+                gameOver();
+            }
+        }
+
+        // 遊戲結束
+        function gameOver() {
+            isGameOver = true;
+            alert(`遊戲結束！你的得分是: ${score}`);
+            resetGame();
+        }
+
+        // 重置遊戲
+        function resetGame() {
+            ball.style.bottom = groundHeight + 'px';
+            currentHeight = 0;
+            score = 0;
+            lives = maxLives;
+            scoreElement.textContent = '得分：0';
+            livesElement.textContent = `生命：${lives}`;
+            obstacles.forEach(obstacle => {
+                gameContainer.removeChild(obstacle);
+            });
+            obstacles = [];
+            isGameOver = false;
+            obstacleSpeed = 2;
+            jumpUpgrade = 0;
+            upgradeElement.textContent = '升級：無';
+        }
+
+        // 更新分數
+        function updateScore() {
+            if (!isGameOver) {
+                score++;
+                scoreElement.textContent = `得分：${score}`;
+            }
+        }
+
+        // 隨機生成障礙物
+        function createObstacle() {
+            const obstacle = document.createElement('div');
+            obstacle.classList.add('obstacle');
+            obstacle.style.left = `${gameContainer.offsetWidth}px`; // 障礙物從右側出現
+            obstacle.style.bottom = `${groundHeight + Math.random() * 100}px`; // 障礙物隨機生成高度
+            gameContainer.appendChild(obstacle);
+            obstacles.push(obstacle);
+
+            // 障礙物移動
+            const moveObstacle = setInterval(() => {
+                let currentLeft = parseInt(obstacle.style.left, 10);
+                if (currentLeft < -obstacleWidth) {
+                    clearInterval(moveObstacle);
+                    gameContainer.removeChild(obstacle);
+                    obstacles = obstacles.filter(o => o !== obstacle);
+                } else {
+                    obstacle.style.left = `${currentLeft - obstacleSpeed}px`;
+                }
+            }, 20);
+        }
+
+        // 增加障礙物並加速
+        function spawnObstacles() {
+            if (isGameOver) return;
+            createObstacle();
+            if (score % 10 === 0 && obstacleSpeed < 10) {
+                obstacleSpeed += 0.5; // 隨著分數增加障礙物的速度
+            }
+        }
+
+        // 隨機升級
+        function randomUpgrade() {
+            if (score % 20 === 0 && score > 0 && jumpUpgrade < 3) {
+                jumpUpgrade++;
+                upgradeElement.textContent = `升級：${upgradeLevels[jumpUpgrade]}`;
+            }
+        }
+
+        // 監聽跳躍鍵
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                jump();
+            }
+        });
+
+        // 定時更新分數
+        setInterval(updateScore, 1000);
+
+        // 定時生成障礙物
+        setInterval(spawnObstacles, 2000); // 每兩秒生成一個新的障礙物
+
+        // 定時隨機升級
+        setInterval(randomUpgrade, 5000); // 每5秒檢查升級
+    </script>
+
+</body>
+</html>
