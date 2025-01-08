@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="個人化健康減肥App，追蹤進度、提供飲食與運動計劃，並加入支持社群。">
+    <title>減肥產品創新App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f0f9ff, #a1dbff, #77cfff);
+            color: #333;
+        }
+        header {
+            background-color: #4bb5ff;
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: #5fc0ff;
+            padding: 0.75rem 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            padding: 2rem;
+        }
+        .card {
+            background: white;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .card h3 {
+            color: #2a6496;
+        }
+        .card ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+        }
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #2a6496;
+            color: white;
+            margin-top: 2rem;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
+        }
+        footer a {
+            color: #ffcccb;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>減肥產品創新App</h1>
+        <p>個人化健康管理平台</p>
+    </header>
+
+    <nav>
+        <a href="#dashboard">每日進度</a>
+        <a href="#health-tracker">健康追蹤</a>
+        <a href="#diet-plan">飲食計劃</a>
+        <a href="#community">支持社群</a>
+    </nav>
+
+    <div class="container">
+        <section id="dashboard" class="card">
+            <h3>每日進度</h3>
+            <p>今日目標完成度：70%</p>
+            <progress value="70" max="100" style="width: 100%;"></progress>
+        </section>
+
+        <section id="health-tracker" class="card">
+            <h3>健康追蹤</h3>
+            <ul>
+                <li>體重：65kg</li>
+                <li>BMI：22.5</li>
+                <li>每日步數：8500步</li>
+            </ul>
+        </section>
+
+        <section id="diet-plan" class="card">
+            <h3>飲食計劃</h3>
+            <p>早餐：燕麥粥 + 水果</p>
+            <p>午餐：烤雞胸肉 + 綠色蔬菜</p>
+            <p>晚餐：清蒸魚 + 地瓜</p>
+        </section>
+
+        <section id="community" class="card">
+            <h3>支持社群</h3>
+            <p>用戶心得分享：</p>
+            <ul>
+                <li>「使用這個App一個月後，我成功減重5公斤！」 - 小明</li>
+                <li>「社群支持讓我感覺不孤單，非常棒！」 - 小花</li>
+            </ul>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 減肥產品創新App. 保留所有權利。</p>
+        <p>聯絡我們: <a href="mailto:info@weightlossapp.com">info@weightlossapp.com</a></p>
+    </footer>
+</body>
+</html>
